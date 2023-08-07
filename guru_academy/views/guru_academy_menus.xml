@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <menuitem
+        id="guru_academy_root_menu"
+        name="Gurú Academy"
+        groups="base.group_user"
+        web_icon="guru_academy,static/description/icon.png"/>
+        <menuitem
+            id="guru_academy_records_menu"
+            name="Registros"
+            parent="guru_academy_root_menu"/>
+
+</odoo>

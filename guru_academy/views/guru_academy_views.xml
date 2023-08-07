@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="guru_academy_view_tree" model="ir.ui.view">
+        <field name="name">guru.academy.view.tree</field>
+        <field name="model">guru.academy</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="street"/>
+                <field name="nro"/>
+                <field name="horario_apertura"/>
+                <field name="horario_cierre"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="guru_academy_view_form" model="ir.ui.view">
+        <field name="name">guru.academy.view.form</field>
+        <field name="model">guru.academy</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="street" required="1"/>
+                            <field name="nro"/>
+                        </group>
+                        <group>
+                            <field name="horario_apertura" widget="float_time"/>
+                            <field name="horario_cierre" widget="float_time"/>
+                            <field name="fecha_fundacion"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="guru_academy_view_action" model="ir.actions.act_window">
+        <field name="name">Academia</field>
+        <field name="res_model">guru.academy</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem
+        id="guru_academy_academia_menu"
+        name="Academia"
+        action="guru_academy_view_action"
+        parent="guru_academy_records_menu"/>
+
+</odoo>
