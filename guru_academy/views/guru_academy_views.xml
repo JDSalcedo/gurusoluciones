@@ -10,7 +10,17 @@
                 <field name="name"/>
                 <field name="street"/>
                 <field name="create_uid" string="Creado por"/>
+                <field name="fecha_fundacion"/>
                 <filter name="archived_filter" string="Archivado" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter name="pending_filter" string="Pendiente" domain="[('state', '=', 'pending')]"/>
+                <filter name="alta_filter" string="Alta" domain="[('state', '=', 'alta')]"/>
+                <filter name="baja_filter" string="Baja" domain="[('state', '=', 'baja')]"/>
+                <separator/>
+                <filter name="fecha_fundacion_filter" string="Fecha Fundación" date="fecha_fundacion"/>
+                <group string="Agrupado por...">
+                    <filter string="Estado" name="group_by_state" domain="[]" context="{'group_by': 'state'}"/>
+                </group>
             </search>
         </field>
     </record>
@@ -20,14 +30,14 @@
         <field name="name">guru.academy.view.tree</field>
         <field name="model">guru.academy</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree decoration-info="state == 'pending'" decoration-success="state == 'alta'" decoration-danger="state == 'baja'">
                 <field name="name"/>
                 <field name="street"/>
                 <field name="nro"/>
                 <field name="horario_inicio"/>
                 <field name="horario_cierre"/>
                 <field name="create_uid" string="Creado por"/>
-                <field name="state"/>
+                <field name="state" widget="badge"  decoration-info="state == 'pending'" decoration-success="state == 'alta'" decoration-danger="state == 'baja'"/>
             </tree>
         </field>
     </record>
@@ -40,8 +50,9 @@
             <form>
                 <field name="active" invisible="1"/>
                 <header>
-                    <button name="action_set_alta" string="Alta" type="object" attrs="{'invisible': [('state', '=', 'alta')]}"/>
-                    <button name="action_set_baja" string="Baja" type="object" attrs="{'invisible': [('state', '=', 'baja')]}"/>
+                    <button name="action_set_pendiente" string="Pendiente" type="object" attrs="{'invisible': [('state', 'in', ('pending','alta'))]}"/>
+                    <button name="action_set_alta" string="Alta" type="object" attrs="{'invisible': [('state', 'in', ('alta','baja'))]}" class="btn-primary"/>
+                    <button name="action_set_baja" string="Baja" type="object" attrs="{'invisible': [('state', '=', 'baja')]}" confirm="¿Está seguro que quiere dar de baja la academia?"/>
                     <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
@@ -95,6 +106,8 @@
         <field name="res_model">guru.academy</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="guru_academy_view_search"/>
+        <field name="context">{'search_default_alta_filter': True}</field>
+<!--        <field name="domain">[('state', '=', 'alta')]</field>-->
     </record>
     <menuitem
         id="guru_academy_academia_menu"
@@ -136,6 +149,17 @@
                             <field name="create_uid" string="Creado por" options="{'no_open': True}"/>
                         </group>
                     </group>
+                    <notebook>
+                        <page string="Alumnos">
+                            <field name="student_ids">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="lastname"/>
+                                </tree>
+                            </field>>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
@@ -154,4 +178,60 @@
         action="guru_academy_sede_view_action"
         parent="guru_academy_records_menu"
         sequence="20"/>
+
+     <!-- Student Tree -->
+     <record id="guru_academy_student_view_tree" model="ir.ui.view">
+        <field name="name">guru.academy.student.view.tree</field>
+        <field name="model">guru.academy.student</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="lastname"/>
+                <field name="street"/>
+                <field name="age"/>
+                <field name="sede_id"/>
+            </tree>
+        </field>
+    </record>
+
+     <!-- Student Form -->
+    <record id="guru_academy_student_view_form" model="ir.ui.view">
+        <field name="name">guru.academy.student.view.form</field>
+        <field name="model">guru.academy.student</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="active" invisible="1"/>
+                <sheet>
+                    <widget name="web_ribbon" title="Archivado" bg_color="bg-warning" attrs="{'invisible': [('active', '=',True)]}"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="lastname"/>
+                            <field name="street"/>
+                            <field name="age"/>
+                        </group>
+                        <group>
+                            <field name="sede_id" options="{'no_create':True, 'no_open': True}"/>
+                            <field name="create_uid" string="Creado por" options="{'no_open': True}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+     <!-- Student Action -->
+    <record id="guru_academy_student_view_action" model="ir.actions.act_window">
+        <field name="name">Alumno</field>
+        <field name="res_model">guru.academy.student</field>
+        <field name="view_mode">tree,form</field>
+     <!--   <field name="search_view_id" ref="guru_academy_view_search"/>  -->
+    </record>
+    <menuitem
+        id="guru_academy_student_menu"
+        name="Alumno"
+        action="guru_academy_student_view_action"
+        parent="guru_academy_records_menu"
+        sequence="20"/>
+
 </odoo>

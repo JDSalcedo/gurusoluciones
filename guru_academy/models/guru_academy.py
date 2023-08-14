@@ -11,9 +11,9 @@ class GuruAcademy(models.Model):
 
     name = fields.Char(string='Nombre', required=True)
     street = fields.Char(string='Dirección')
-    nro = fields.Integer(string='Nro')
-    horario_inicio = fields.Float(string='Horario Apertura')
-    horario_cierre = fields.Float(string='Horario Cierre')
+    nro = fields.Integer(string='Nro', group_operator=False)
+    horario_inicio = fields.Float(string='Horario Apertura', group_operator=False)
+    horario_cierre = fields.Float(string='Horario Cierre', group_operator=False)
     fecha_fundacion = fields.Date(string='Fundado en')
     # create_uid = fields.Many2one(string='Creado por')
     active = fields.Boolean(string='Activo', default=True)
@@ -34,6 +34,10 @@ class GuruAcademy(models.Model):
         for academy in self:
             academy.sede_count = len(academy.sede_ids)
 
+    def action_set_pendiente(self):
+        self.ensure_one()
+        self.write({'state': PENDING})
+
     def action_set_alta(self):
         self.ensure_one()
         self.write({'state': ALTA})
@@ -45,11 +49,26 @@ class GuruAcademy(models.Model):
 
 class GuruAcademySede(models.Model):
     _name = 'guru.academy.sede'
-    _description = 'Tabla dSede de Academia'
+    _description = 'Tabla Sede de Academia'
     # _order = 'street'
 
     name = fields.Char(string='Nombre', required=True)
     street = fields.Char(string='Dirección', required=True)
     active = fields.Boolean(string='Activo', default=True)
     academy_id = fields.Many2one('guru.academy', string='Academia', required=True, ondelete='restrict')
+    student_ids = fields.One2many(comodel_name='guru.academy.student', inverse_name='sede_id', string='Alumnos')
+    sequence = fields.Integer(string='Secuencia', default=10)
+
+
+class GuruAcademyStudent(models.Model):
+    _name = 'guru.academy.student'
+    _description = 'Tabla Alumno de Sede de Academia'
+    # _order = 'street'
+
+    name = fields.Char(string='Nombre', required=True)
+    lastname = fields.Char(string='Apellido', required=True)
+    street = fields.Char(string='Dirección', required=True)
+    age = fields.Integer(string='Edad', required=True)
+    active = fields.Boolean(string='Activo', default=True)
+    sede_id = fields.Many2one('guru.academy.sede', string='Sede', required=True, ondelete='restrict')
     sequence = fields.Integer(string='Secuencia', default=10)
