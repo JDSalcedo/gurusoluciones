@@ -9,8 +9,61 @@
                 <field name="name"/>
                 <field name="street"/>
                 <field name="create_uid" string="Creado por"/>
+                <field name="fecha_fundacion"/>
                 <filter name="archived_filter" string="Archivado" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter name="pending_filter" string="Pendiente" domain="[('state', '=', 'pending')]"/>
+                <filter name="alta_filter" string="Alta" domain="[('state', '=', 'alta')]"/>
+                <filter name="baja_filter" string="Baja" domain="[('state', '=', 'baja')]"/>
+                <separator/>
+                <filter name="fecha_fundacion_filter" string="Fecha Fundación" date="fecha_fundacion"/>
+                <group string="Agrupado por...">
+                    <filter string="Estado" name="group_by_state" domain="[]" context="{'group_by': 'state'}"/>
+                </group>
             </search>
+        </field>
+    </record>
+
+    <!-- Academy Kanban -->
+    <record id="guru_academy_view_kanban" model="ir.ui.view">
+        <field name="name">guru.academy.view.kanban</field>
+        <field name="model">guru.academy</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="state"/>
+                <field name="name"/>
+                <field name="street"/>
+                <field name="nro"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_tags_section">
+                                <strong class="float-right">
+                                    <field name="state" widget="badge"
+                                           decoration-info="state == 'pending'"
+                                           decoration-success="state == 'alta'"
+                                           decoration-danger="state == 'baja'"/>
+                                </strong>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <h1>
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                </h1>
+                                <ul>
+                                    <li t-if="record.street.raw_value">
+                                        <field name="street"/>
+                                    </li>
+                                    <li t-if="record.nro.raw_value">
+                                        <field name="nro"/>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 
@@ -19,14 +72,14 @@
         <field name="name">guru.academy.view.tree</field>
         <field name="model">guru.academy</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree decoration-info="state == 'pending'" decoration-success="state == 'alta'" decoration-danger="state == 'baja'">
                 <field name="name"/>
                 <field name="street"/>
                 <field name="nro"/>
                 <field name="horario_apertura"/>
                 <field name="horario_cierre"/>
                 <field name="create_uid" string="Creado por"/>
-                <field name="state"/>
+                <field name="state" widget="badge" decoration-info="state == 'pending'" decoration-success="state == 'alta'" decoration-danger="state == 'baja'"/>
             </tree>
         </field>
     </record>
@@ -39,8 +92,9 @@
             <form>
                 <field name="active" invisible="1"/>
                 <header>
-                    <button name="action_set_alta" string="Alta" type="object" attrs="{'invisible': [('state', '=', 'alta')]}"/>
-                    <button name="action_set_baja" string="Baja" type="object" attrs="{'invisible': [('state', '=', 'baja')]}"/>
+                    <button name="action_set_alta" string="Alta" type="object" attrs="{'invisible': [('state', '=', 'alta')]}" class="btn-primary"/>
+                    <button name="action_set_baja" string="Baja" type="object" attrs="{'invisible': [('state', '=', 'baja')]}"
+                            confirm="¿Está seguro de dar de Baja a la Academia?"/>
                     <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
@@ -85,6 +139,11 @@
                         </page>
                     </notebook>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
@@ -93,8 +152,10 @@
     <record id="guru_academy_view_action" model="ir.actions.act_window">
         <field name="name">Academia</field>
         <field name="res_model">guru.academy</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">kanban,tree,form</field>
         <field name="search_view_id" ref="guru_academy_view_search"/>
+        <field name="context">{'search_default_alta_filter': 1}</field>
+        <field name="domain">[]</field>
     </record>
     <menuitem
         id="guru_academy_academia_menu"
@@ -102,7 +163,6 @@
         action="guru_academy_view_action"
         parent="guru_academy_records_menu"
         sequence="10"/>
-
 
     <!-- Sede Tree-->
     <record id="guru_academy_sede_view_tree" model="ir.ui.view">
