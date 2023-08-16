@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 PENDING = 'pending'
 ALTA = 'alta'
@@ -35,6 +36,10 @@ class GuruAcademy(models.Model):
         for academy in self:
             academy.sede_count = len(academy.sede_ids)
 
+    def action_set_pendiente(self):
+        self.ensure_one()
+        self.write({'state': PENDING})
+
     def action_set_alta(self):
         self.ensure_one()
         self.write({'state': ALTA})
@@ -52,7 +57,61 @@ class GuruAcademySede(models.Model):
     name = fields.Char(string='Nombre', required=True)
     street = fields.Char(string='Dirección', required=True)
     active = fields.Boolean(string='Activo', default=True)
-    academy_id = fields.Many2one(
-        'guru.academy', string='Academia', required=True, ondelete='restrict'
-    )
+    academy_id = fields.Many2one('guru.academy', string='Academia', required=True, ondelete='restrict')
+    student_ids = fields.One2many(comodel_name='guru.academy.student', inverse_name='sede_id', string='Alumnos')
     sequence = fields.Integer(string='Secuencia', default=10)
+
+
+class GuruAcademyStudent(models.Model):
+    _name = 'guru.academy.student'
+    _description = 'Tabla Alumno de Sede de Academia'
+    # _order = 'street'
+
+    name = fields.Char(string='Nombre', required=True)
+    lastname = fields.Char(string='Apellido', required=True)
+    street = fields.Char(string='Dirección', required=True)
+    age = fields.Integer(string='Edad', required=True)
+    active = fields.Boolean(string='Activo', default=True)
+    sede_id = fields.Many2one('guru.academy.sede', string='Sede', required=True, ondelete='restrict')
+    sequence = fields.Integer(string='Secuencia', default=10)
+    user_id = fields.Many2one('res.users', string='Usuario')
+
+    _sql_constraints = [
+        ('name_unique', 'unique(name)', 'El nombre debe ser único.'),
+        ('user_id_unique', 'unique(user_id)', 'El Usuario relacionado debe ser único por Alumno.')
+    ]
+
+    # @api.model_create_multi
+    @api.model
+    def create(self, values):
+        age = values['age']
+        if age > 99 or age < 0:
+            raise UserError('La Edad del Alumno debe estar entre 0 y 99 años.')
+        if not values['user_id']:
+            login = values['lastname'].replace(' ', '_').lower()
+            user_values = {
+                'name': values['name'],
+                'login': f'{login}_new',
+            }
+            user_id = self.env['res.users'].create(user_values)
+            # new_user_id = user_id.copy({'login': f'{login}_copy'})
+            values['user_id'] = user_id.id
+        return super(GuruAcademyStudent, self).create(values)
+
+    def write(self, values):
+        if 'age' in values:
+            age = values['age']
+            if age > 99 or age < 0:
+                raise UserError('La Edad del Alumno debe estar entre 0 y 99 años.')
+        return super(GuruAcademyStudent, self).write(values)
+
+    def copy(self, default=None):
+        default = dict(default or {})
+        default['name'] = f'{self.name}_copy'
+        default['user_id'] = False
+        return super(GuruAcademyStudent, self).copy(default)
+
+    def unlink(self):
+        self.write({'active': False})
+        return True
+        # return super(GuruAcademyStudent, self).unlink()
