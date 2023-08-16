@@ -8,8 +8,9 @@ BAJA = 'baja'
 class GuruAcademy(models.Model):
     _name = 'guru.academy'  # table: guru_academy
     _description = 'Tabla de Academias'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    name = fields.Char(string='Nombre', required=True)
+    name = fields.Char(string='Nombre', required=True, tracking=True)
     street = fields.Char(string='Dirección')
     nro = fields.Integer(string='Nro', group_operator=False)
     horario_inicio = fields.Float(string='Horario Apertura', group_operator=False)

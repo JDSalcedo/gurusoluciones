@@ -11,7 +11,7 @@ Módulo para registrar las capacitaciones/cursos dictados en Guru Soluciones.
     """,
     'category': 'Academy/eLearning',
     'website': 'https://www.gurusoluciones.com',
-    'depends': ['base'],
+    'depends': ['mail'],
     'data': [
         'security/ir.model.access.csv',
         'views/guru_academy_menus.xml',
