@@ -16,6 +16,7 @@ Módulo para registrar las capacitaciones/cursos dictados en Guru Soluciones.
         'security/ir.model.access.csv',
         'views/guru_academy_menus.xml',
         'views/guru_academy_views.xml',
+        'views/res_users_views.xml',
     ],
     'installable': True,
     'application': True,

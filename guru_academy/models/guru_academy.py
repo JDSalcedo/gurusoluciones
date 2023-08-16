@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 PENDING = 'pending'
 ALTA = 'alta'
@@ -72,4 +73,45 @@ class GuruAcademyStudent(models.Model):
     age = fields.Integer(string='Edad', required=True)
     active = fields.Boolean(string='Activo', default=True)
     sede_id = fields.Many2one('guru.academy.sede', string='Sede', required=True, ondelete='restrict')
+    user_id = fields.Many2one('res.users', string='Usuario')
     sequence = fields.Integer(string='Secuencia', default=10)
+
+    _sql_constraints = [
+        ('name_unique', 'unique(name)', 'El nombre debe ser único.'),
+        ('user_id_unique', 'unique(user_id)', 'El usuario relacionado debe ser único por Alumno.'),
+    ]
+
+    # @api.model_create_multi
+    @api.model
+    def create(self, values):
+        age = values['age']
+        if age > 99 or age < 0:
+            raise UserError('La Edad del Alumno debe estar entre 0 y 99 años.')
+        if not values['user_id']:
+            login = values['lastname'].replace(' ','_').lower()
+            user_values = {
+                'name': values['name'],
+                'login': f'{login}_new',
+            }
+            user_id = self.env['res.users'].create(user_values)
+            # new_user_id = user_id.copy({'login': f'{login}_copy'})
+            values['user_id'] = user_id.id
+        return super(GuruAcademyStudent,self).create(values)
+
+    def write(self, values):
+        if 'age' in values:
+            age = values['age']
+            if age > 99 or age < 0:
+                raise UserError('La Edad del Alumno debe estar entre 0 y 99 años.')
+        return super(GuruAcademyStudent, self).write(values)
+
+    def copy(self, default=None):
+        default = dict(default or {})
+        default['name'] = f'{self.name}_copy'
+        default['user_id'] = False
+        return super(GuruAcademyStudent,self).copy(default)
+
+    def unlink(self):
+        self.write({'active': False})
+        return True
+        # return super(GuruAcademyStudent,self).unlink()

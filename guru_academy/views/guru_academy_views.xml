@@ -128,13 +128,13 @@
                                 <form>
                                     <sheet>
                                         <group>
-                                             <group>
+                                            <group>
                                                 <field name="name"/>
-                                             </group>
-                                             <group>
-                                                 <field name="street"/>
-                                                 <field name="sequence"/>
-                                             </group>
+                                            </group>
+                                            <group>
+                                                <field name="street"/>
+                                                <field name="sequence"/>
+                                            </group>
                                         </group>
                                     </sheet>
                                 </form>
@@ -168,7 +168,7 @@
         sequence="10"/>
 
     <!-- Sede Tree -->
-     <record id="guru_academy_sede_view_tree" model="ir.ui.view">
+    <record id="guru_academy_sede_view_tree" model="ir.ui.view">
         <field name="name">guru.academy.sede.view.tree</field>
         <field name="model">guru.academy.sede</field>
         <field name="arch" type="xml">
@@ -263,6 +263,7 @@
                         </group>
                         <group>
                             <field name="sede_id" options="{'no_create':True, 'no_open': True}"/>
+                            <field name="user_id" options="{'no_create':True, 'no_open': True}"/>
                             <field name="create_uid" string="Creado por" options="{'no_open': True}"/>
                         </group>
                     </group>
