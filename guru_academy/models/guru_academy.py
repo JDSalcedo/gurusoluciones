@@ -60,6 +60,12 @@ class GuruAcademySede(models.Model):
     academy_id = fields.Many2one('guru.academy', string='Academia', required=True, ondelete='restrict')
     student_ids = fields.One2many(comodel_name='guru.academy.student', inverse_name='sede_id', string='Alumnos')
     sequence = fields.Integer(string='Secuencia', default=10)
+    student_count = fields.Integer(compute='_compute_student_count', string='# Alumnos', store=True)
+
+    @api.depends('student_ids')
+    def _compute_student_count(self):
+        for sede in self:
+            sede.student_count = len(sede.student_ids)
 
 
 class GuruAcademyStudent(models.Model):

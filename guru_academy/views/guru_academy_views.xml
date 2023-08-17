@@ -198,6 +198,7 @@
                         <group>
                             <field name="academy_id" options="{'no_create':True, 'no_open': True}"/>
                             <field name="create_uid" string="Creado por" options="{'no_open': True}"/>
+                            <field name="student_count"/>
                         </group>
                     </group>
                     <notebook>
