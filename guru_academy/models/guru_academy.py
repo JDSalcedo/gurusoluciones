@@ -11,7 +11,7 @@ class GuruAcademy(models.Model):
     _description = 'Tabla de Academias'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    name = fields.Char(string='Nombre', required=True, tracking=True)
+    name = fields.Char(string='Nombre', required=True, tracking=True, copy=False)
     street = fields.Char(string='Dirección')
     nro = fields.Integer(string='Nro', group_operator=False)
     horario_inicio = fields.Float(string='Horario Apertura', group_operator=False)
@@ -19,7 +19,7 @@ class GuruAcademy(models.Model):
     fecha_fundacion = fields.Date(string='Fundado en')
     # create_uid = fields.Many2one(string='Creado por')
     active = fields.Boolean(string='Activo', default=True)
-    sede_ids = fields.One2many(comodel_name='guru.academy.sede', inverse_name='academy_id', string='Sedes')
+    sede_ids = fields.One2many(comodel_name='guru.academy.sede', inverse_name='academy_id', string='Sedes', copy=False)
     sede_count = fields.Integer(compute='_compute_sede_count', string='# Sedes', store=True)
     state = fields.Selection([
         (PENDING, 'Pendiente'),
@@ -35,6 +35,11 @@ class GuruAcademy(models.Model):
     def _compute_sede_count(self):
         for academy in self:
             academy.sede_count = len(academy.sede_ids)
+
+    def copy(self, default=None):
+        default = dict(default or {})
+        default['name'] = f'{self.name}_copy'
+        return super(GuruAcademy, self).copy(default)
 
     def action_set_pendiente(self):
         self.ensure_one()
@@ -94,7 +99,7 @@ class GuruAcademyStudent(models.Model):
         if age > 99 or age < 0:
             raise UserError('La Edad del Alumno debe estar entre 0 y 99 años.')
         if not values['user_id']:
-            login = values['lastname'].replace(' ','_').lower()
+            login = values['lastname'].replace(' ', '_').lower()
             user_values = {
                 'name': values['name'],
                 'login': f'{login}_new',
@@ -102,7 +107,7 @@ class GuruAcademyStudent(models.Model):
             user_id = self.env['res.users'].create(user_values)
             # new_user_id = user_id.copy({'login': f'{login}_copy'})
             values['user_id'] = user_id.id
-        return super(GuruAcademyStudent,self).create(values)
+        return super(GuruAcademyStudent, self).create(values)
 
     def write(self, values):
         if 'age' in values:
@@ -115,7 +120,7 @@ class GuruAcademyStudent(models.Model):
         default = dict(default or {})
         default['name'] = f'{self.name}_copy'
         default['user_id'] = False
-        return super(GuruAcademyStudent,self).copy(default)
+        return super(GuruAcademyStudent, self).copy(default)
 
     def unlink(self):
         self.write({'active': False})

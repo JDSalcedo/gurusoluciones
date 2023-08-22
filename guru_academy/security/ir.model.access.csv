@@ -2,3 +2,4 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_guru_academy_user,Acceso de usuario,guru_academy.model_guru_academy,base.group_user,1,1,1,1
 access_guru_academy_sede_user,Acceso de usuario Sede,guru_academy.model_guru_academy_sede,base.group_user,1,1,1,1
 access_guru_academy_student_user,Acceso de usuario Alumno,guru_academy.model_guru_academy_student,base.group_user,1,1,1,1
+access_guru_academy_attendance_user,Acceso de usuario Asistencia,guru_academy.model_guru_academy_attendance,base.group_user,1,1,1,0
