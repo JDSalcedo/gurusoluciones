@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- Attendance Tree -->
+    <record id="guru_academy_attendance_view_tree" model="ir.ui.view">
+        <field name="name">guru.academy.attendance.view.tree</field>
+        <field name="model">guru.academy.attendance</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sede_id"/>
+                <field name="date"/>
+                <field name="user_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Attendance Form -->
+    <record id="guru_academy_attendance_view_form" model="ir.ui.view">
+        <field name="name">guru.academy.attendance.view.form</field>
+        <field name="model">guru.academy.attendance</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="sede_id" options="{'no_create':True, 'no_open': True}"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="user_id" options="{'no_create':True, 'no_open': True}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Attendance Action -->
+    <record id="guru_academy_attendance_view_action" model="ir.actions.act_window">
+        <field name="name">Reg. Asistencia</field>
+        <field name="res_model">guru.academy.attendance</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem
+        id="guru_academy_attendance_menu"
+        name="Reg. Asistencia"
+        action="guru_academy_attendance_view_action"
+        parent="guru_academy_attending_menu"
+        sequence="10"/>
+
+</odoo>
