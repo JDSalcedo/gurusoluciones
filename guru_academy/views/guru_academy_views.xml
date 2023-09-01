@@ -226,8 +226,8 @@
         parent="guru_academy_records_menu"
         sequence="20"/>
 
-     <!-- Student Tree -->
-     <record id="guru_academy_student_view_tree" model="ir.ui.view">
+    <!-- Student Tree -->
+    <record id="guru_academy_student_view_tree" model="ir.ui.view">
         <field name="name">guru.academy.student.view.tree</field>
         <field name="model">guru.academy.student</field>
         <field name="arch" type="xml">
@@ -241,7 +241,7 @@
         </field>
     </record>
 
-     <!-- Student Form -->
+    <!-- Student Form -->
     <record id="guru_academy_student_view_form" model="ir.ui.view">
         <field name="name">guru.academy.student.view.form</field>
         <field name="model">guru.academy.student</field>
@@ -268,7 +268,7 @@
         </field>
     </record>
 
-     <!-- Student Action -->
+    <!-- Student Action -->
     <record id="guru_academy_student_view_action" model="ir.actions.act_window">
         <field name="name">Alumno</field>
         <field name="res_model">guru.academy.student</field>
