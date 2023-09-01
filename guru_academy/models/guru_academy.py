@@ -88,7 +88,7 @@ class GuruAcademyStudent(models.Model):
     sequence = fields.Integer(string='Secuencia', default=10)
 
     _sql_constraints = [
-        ('name_unique', 'unique(name)', 'El nombre debe ser único.'),
+        ('name_lastname_sede_id_unique', 'unique(name,lastname,sede_id)', 'El nombre debe ser único.'),
         ('user_id_unique', 'unique(user_id)', 'El usuario relacionado debe ser único por Alumno.'),
     ]
 
@@ -98,7 +98,7 @@ class GuruAcademyStudent(models.Model):
         age = values['age']
         if age > 99 or age < 0:
             raise UserError('La Edad del Alumno debe estar entre 0 y 99 años.')
-        if not values['user_id']:
+        if 'user_id' not in values or not values['user_id']:
             login = values['lastname'].replace(' ', '_').lower()
             user_values = {
                 'name': values['name'],
@@ -106,7 +106,8 @@ class GuruAcademyStudent(models.Model):
             }
             user_id = self.env['res.users'].create(user_values)
             # new_user_id = user_id.copy({'login': f'{login}_copy'})
-            values['user_id'] = user_id.id
+            # values['user_id'] = user_id.id
+            values.update({'user_id': user_id.id})
         return super(GuruAcademyStudent, self).create(values)
 
     def write(self, values):

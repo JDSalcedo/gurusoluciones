@@ -208,6 +208,8 @@
                                     <field name="sequence" widget="handle"/>
                                     <field name="name"/>
                                     <field name="lastname"/>
+                                    <field name="street"/>
+                                    <field name="age"/>
                                 </tree>
                             </field>
                         </page>
