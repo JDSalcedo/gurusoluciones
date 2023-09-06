@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+     <menuitem id="guru_airline_root_menu" name="Gurú Airline"/>
+        <menuitem id="guru_airline_records_menu" name="Registros" parent="guru_airline_root_menu"/>
+        <menuitem id="guru_airline_airline_menu" name="Aerolínea" parent="guru_airline_root_menu"/>
+        <menuitem id="guru_airline_pasajeros_menu" name="Pasajeros" parent="guru_airline_root_menu"/>
+        <menuitem id="guru_airline_vuelos_menu" name="Vuelos" parent="guru_airline_root_menu"/>
+</odoo>

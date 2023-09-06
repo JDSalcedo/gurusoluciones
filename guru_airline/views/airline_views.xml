@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- Airline Tree -->
+    <record id="guru_airline_view_tree" model="ir.ui.view">
+        <field name="name">guru.airline.view.tree</field>
+        <field name="model">guru.airline</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="street"/>
+                <field name="zip"/>
+                <field name="country_id"/>
+                <field name="phone"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Airline form -->
+    <record id="guru_airline_view_form" model="ir.ui.view">
+        <field name="name">guru.airline.view.form</field>
+        <field name="model">guru.airline</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                         <group>
+                            <field name="name"/>
+                         </group>
+                         <group>
+                            <field name="street"/>
+                            <field name="zip"/>
+                            <field name="country_id"/>
+                            <field name="phone"/>
+                         </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>
