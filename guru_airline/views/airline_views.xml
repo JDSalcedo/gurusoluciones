@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Vista de lista para el index de la operación -->
+    <record id="guru_airline_view_tree" model="ir.ui.view">
+        <field name="name">guru.airline.view.tree</field>
+        <field name="model">guru.airline</field>
+        <field name="arch" type="xml">
+            <tree>
+                <filed name="name" />
+                <filed name="country_id" />
+                <filed name="street" />
+                <filed name="zip" />
+                <filed name="phone" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vista de formulario para la creación/modificación de un elemento -->
+    <record id="guru_airline_view_form" model="ir.ui.view">
+        <field name="name">guru.airline.view.form</field>
+        <field name="model">guru.airline</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <filed name="name" />
+                        </group>
+                        <group>
+                            <filed name="country_id" />
+                            <filed name="street" />
+                            <filed name="zip" />
+                            <filed name="phone" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>
