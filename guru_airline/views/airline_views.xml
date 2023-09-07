@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
+    <!-- Search -->
+    <record id="guru_airline_view_search" model="ir.ui.view">
+        <field name="name">guru.airline.view.search</field>
+        <field name="model">guru.airline</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="street"/>
+                <field name="zip"/>
+                <field name="phone"/>
+                <field name="country_id"/>
+                <field name="active"/>
+                <filter name="inactive_filter" string="Archivado" domain="[('active', '=', False)]"/>
+                <group string="Agrupado por...">
+                    <filter name="group_by_country_id" string="País" domain="[]" context="{'group_by': 'country_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <!-- Tree -->
     <record id="guru_airline_view_tree" model="ir.ui.view">
         <field name="name">guru.airline.view.tree</field>
@@ -12,6 +32,8 @@
                 <field name="zip"/>
                 <field name="phone"/>
                 <field name="country_id"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="state"/>
             </tree>
         </field>
     </record>
@@ -22,32 +44,61 @@
         <field name="model">guru.airline</field>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,ready" options="{'clickable': '1'}"/>
+                </header>
                 <sheet>
+                    <div>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Latam..."/>
+                        </h1>
+                    </div>
                     <group>
                         <group>
-                            <field name="name"/>
+                            <field name="street" required="1"/>
                         </group>
                         <group>
-                            <field name="street"/>
                             <field name="zip"/>
                             <field name="phone"/>
                             <field name="country_id"/>
+                            <field name="active"/>
                         </group>
                     </group>
                 </sheet>
             </form>
         </field>
     </record>
+
     <!-- Accion -->
     <record id="guru_airline_action" model="ir.actions.act_window">
         <field name="name">Aerolínea</field>
         <field name="res_model">guru.airline</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="guru_airline_view_search"/>
     </record>
     <menuitem
         id="guru_airline_airline"
         name="Aerolínea"
         action="guru_airline_action"
-        parent="guru_airline_registros"/>
+        parent="guru_airline_registros"
+        sequence="10"/>
+
+    <!-- Accion Archived-->
+    <record id="guru_airline_archived_action" model="ir.actions.act_window">
+        <field name="name">Aerolíneas Archivadas</field>
+        <field name="res_model">guru.airline</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="guru_airline_view_search"/>
+        <field name="domain">[('active', '=', False)]</field>
+<!--        <field name="target">current</field>-->
+<!--        <field name="context">{'search_default_inactive_filter': 1, 'search_default_group_by_country_id': 1}</field>-->
+    </record>
+    <menuitem
+        id="guru_airline_airline_archived"
+        name="Aerolíneas Archivadas"
+        action="guru_airline_archived_action"
+        parent="guru_airline_registros"
+        sequence="20"/>
 
 </odoo>

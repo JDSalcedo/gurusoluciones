@@ -10,3 +10,10 @@ class Airline(models.Model):
     street = fields.Char(string='Dirección')
     zip = fields.Char(string='Zip', size=7)
     phone = fields.Char(string='Teléfono')
+    active = fields.Boolean(default=True, string='Activo')
+    state = fields.Selection(
+        [('pending', 'Pendiente'), ('ready', 'Listo'), ('baja', 'De Baja')],
+        default='pending',
+        string='Estado',
+        required=True
+    )
