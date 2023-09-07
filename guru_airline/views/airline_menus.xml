@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-     <menuitem id="guru_airline_root_menu" name="Gurú Airline"/>
+     <menuitem
+        id="guru_airline_root_menu"
+        name="Gurú Airline"
+        web_icon="guru_airline,static/description/icon.png"/>
         <menuitem id="guru_airline_records_menu" name="Registros" parent="guru_airline_root_menu"/>
 
             <menuitem id="guru_airline_flota_menu" name="Flota" parent="guru_airline_root_menu"/>
