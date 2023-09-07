@@ -8,5 +8,5 @@ class Airline(models.Model):
     name = fields.Char(string='Nombre', required=True)
     country_id = fields.Many2one(comodel_name='res.country', string='País', required=True)
     street = fields.Char(string='Dirección')
-    zip = fields.Char(String='Código Postal', size=7)
+    zip = fields.Char(string='Código Postal', size=7)
     phone = fields.Char(string='Teléfono')

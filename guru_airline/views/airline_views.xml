@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
-    <!-- Airline Tree -->
+    <!-- Tree -->
     <record id="guru_airline_view_tree" model="ir.ui.view">
         <field name="name">guru.airline.view.tree</field>
         <field name="model">guru.airline</field>
@@ -10,13 +10,13 @@
                 <field name="name"/>
                 <field name="street"/>
                 <field name="zip"/>
-                <field name="country_id"/>
                 <field name="phone"/>
+                <field name="country_id"/>
             </tree>
         </field>
     </record>
 
-    <!-- Airline form -->
+    <!-- Form -->
     <record id="guru_airline_view_form" model="ir.ui.view">
         <field name="name">guru.airline.view.form</field>
         <field name="model">guru.airline</field>
@@ -24,19 +24,30 @@
             <form>
                 <sheet>
                     <group>
-                         <group>
+                        <group>
                             <field name="name"/>
-                         </group>
-                         <group>
+                        </group>
+                        <group>
                             <field name="street"/>
                             <field name="zip"/>
-                            <field name="country_id"/>
                             <field name="phone"/>
-                         </group>
+                            <field name="country_id"/>
+                        </group>
                     </group>
                 </sheet>
             </form>
         </field>
     </record>
+    <!-- Accion -->
+    <record id="guru_airline_action" model="ir.actions.act_window">
+        <field name="name">Aerolínea</field>
+        <field name="res_model">guru.airline</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem
+        id="guru_airline_airline"
+        name="Aerolínea"
+        action="guru_airline_action"
+        parent="guru_airline_records_menu"/>
 
 </odoo>

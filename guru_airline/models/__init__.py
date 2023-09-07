@@ -1,1 +1,1 @@
-from . import airline
+from . import airline  # noqa
