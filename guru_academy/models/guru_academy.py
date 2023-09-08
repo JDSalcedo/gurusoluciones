@@ -126,4 +126,4 @@ class GuruAcademyStudent(models.Model):
     def unlink(self):
         self.write({'active': False})
         return True
-        # return super(GuruAcademyStudent,self).unlink()
+        # return super(GuruAcademyStudent, self).unlink()

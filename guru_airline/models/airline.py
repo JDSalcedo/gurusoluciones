@@ -1,5 +1,9 @@
 from odoo import fields, models
 
+PENDING = 'pending'
+READY = 'ready'
+BAJA = 'baja'
+
 
 class Airline(models.Model):
     _name = 'guru.airline'  # table: guru_airline
@@ -12,7 +16,44 @@ class Airline(models.Model):
     phone = fields.Char(string='Teléfono')
     active = fields.Boolean(default=True, string='Activo')
     state = fields.Selection([
-        ('pending', 'Pendiente'),
-        ('ready', 'Listo'),
-        ('baja', 'De Baja')
+        (PENDING, 'Pendiente'),
+        (READY, 'Listo'),
+        (BAJA, 'De Baja')
     ], default='pending', string='Estado', required=True)
+
+    def action_set_baja(self):
+        self.ensure_one()
+        self.write({'state': BAJA})
+
+    def action_open_wizard(self):
+        """
+            Se llama a una acción registrada en XML.
+            Y le actualiza algunos campos.
+            :return: Action
+        """
+        self.ensure_one()
+        action = self.env['ir.actions.act_window']._for_xml_id('guru_airline.guru_airline_action')
+        action['domain'] = [('id', '=', self.id)]
+        action['target'] = 'new'
+        return action
+
+    def action_open_archived_wizard(self):
+        """
+           Crea una acción nueva de forma temporal.
+           :return: Action
+       """
+        self.ensure_one()
+        # action = self.env['ir_actions.act_window']._for_xml_id('guru_airline.guru_airline_archived_wizard_action')
+        # action['domain'] = [('id', '=',self.id)]
+        # country = self.env['res.country'].search([('name', '=', 'Antártida')])
+        return {
+            'name': 'Aerolíneas Archivadas',
+            'type': 'ir.actions.act_window',
+            'res_model': 'guru.airline',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'view_id': [self.env.ref('guru_airline.guru_airline_view_form').id],
+            'target': 'new',
+            'res_id': self.id,
+            # 'context': {'default_zip': '15080', 'default_country_id': country.id},
+        }

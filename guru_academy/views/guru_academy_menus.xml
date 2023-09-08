@@ -13,4 +13,5 @@
             id="guru_academy_attending_menu"
             name="Asistencia"
             parent="guru_academy_root_menu"/>
+
 </odoo>

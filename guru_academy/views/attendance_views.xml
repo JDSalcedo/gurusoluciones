@@ -35,7 +35,7 @@
         </field>
     </record>
 
-    <!-- attendance Action -->
+    <!-- Attendance Action -->
     <record id="guru_academy_attendance_view_action" model="ir.actions.act_window">
         <field name="name">Reg. Asistencia</field>
         <field name="res_model">guru.academy.attendance</field>
