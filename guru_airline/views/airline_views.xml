@@ -26,7 +26,7 @@
         <field name="name">guru.airline.view.tree</field>
         <field name="model">guru.airline</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree create="1">
                 <field name="name"/>
                 <field name="street"/>
                 <field name="zip"/>
@@ -38,13 +38,28 @@
         </field>
     </record>
 
+    <!-- Accion Archived Wizard(PopUp)-->
+    <record id="guru_airline_archived_wizard_action" model="ir.actions.act_window">
+        <field name="name">Aerolíneas Archivadas Wizard</field>
+        <field name="res_model">guru.airline</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="guru_airline_view_search"/>
+        <field name="domain">[('active', '=', False)]</field>
+        <field name="target">new</field>
+<!--        <field name="context">{'search_default_inactive_filter': 1, 'search_default_group_by_country_id': 1}</field>-->
+    </record>
+
     <!-- Form -->
     <record id="guru_airline_view_form" model="ir.ui.view">
         <field name="name">guru.airline.view.form</field>
         <field name="model">guru.airline</field>
         <field name="arch" type="xml">
-            <form>
+            <form create="1">
                 <header>
+                    <button name="action_set_baja" string="Dar de Baja" type="object" attrs="{'invisible': [('state', '=', 'baja')]}"/>
+                    <button name="%(guru_airline_archived_wizard_action)s" type="action" string="Ver Archivados"/>
+                    <button name="action_open_wizard" string="Ver Archivados" type="object" class="btn-primary"/>
+                    <button name="action_open_archived_wizard" string="Ver Registro" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="pending,ready" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
@@ -59,9 +74,9 @@
                             <field name="street" required="1"/>
                         </group>
                         <group>
-                            <field name="zip"/>
+                            <field name="zip" attrs="{'required': [('state', '=', 'pending')]}"/>
                             <field name="phone"/>
-                            <field name="country_id"/>
+                            <field name="country_id" options="{'no_create': 1, 'no_open': 1}"/>
                             <field name="active"/>
                         </group>
                     </group>
