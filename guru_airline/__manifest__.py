@@ -15,6 +15,7 @@ Módulo para realizar tracking de vuelos de la empresa Guru Soluciones.
     'data': [
         'security/ir.model.access.csv',
         'views/airline_menus.xml',
+        'views/airplane_views.xml',
         'views/airline_views.xml',
     ],
     'installable': True,

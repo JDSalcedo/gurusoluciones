@@ -29,8 +29,8 @@
             <tree create="1">
                 <field name="name"/>
                 <field name="street"/>
-                <field name="zip"/>
-                <field name="phone"/>
+                <field name="zip" optional="show"/>
+                <field name="phone" optional="hide"/>
                 <field name="country_id"/>
                 <field name="active" widget="boolean_toggle"/>
                 <field name="state"/>
@@ -80,6 +80,37 @@
                             <field name="active"/>
                         </group>
                     </group>
+                    <notebook>
+                        <page string="Aeroplanos">
+                            <field name="airplane_ids" readonly="0" context="{'tree_view_ref': 'guru_airline.guru_airplane_view_tree2'}">
+                                <form>
+                                    <header>
+                                        <field name="state" widget="statusbar" statusbar_visible="ready,baja" options="{'clickable': '1'}"/>
+                                    </header>
+                                    <sheet>
+                                        <div>
+                                            <label for="name" class="oe_edit_only"/>
+                                            <h1>
+                                                <field name="name" placeholder="Boeing 747.."/>
+                                            </h1>
+                                        </div>
+                                        <group>
+                                            <group>
+                                                <field name="type"/>
+                                                <field name="capacity"/>
+                                                <field name="engine_qty"/>
+                                            </group>
+                                            <group>
+                                                <field name="airline_id" groups="base.group_no_one"/>
+                                                <field name="active"/>
+                                            </group>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Otra información"></page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

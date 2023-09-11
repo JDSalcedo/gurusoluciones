@@ -1,8 +1,10 @@
 from odoo import fields, models
 
-PENDING = 'pending'
-READY = 'ready'
-BAJA = 'baja'
+from .constants import (
+    PENDING,
+    READY,
+    BAJA
+)
 
 
 class Airline(models.Model):
@@ -20,6 +22,11 @@ class Airline(models.Model):
         default=PENDING,
         string='Estado',
         required=True
+    )
+    airplane_ids = fields.One2many(
+        comodel_name='guru.airplane',
+        inverse_name='airline_id',
+        string='Aeroplanos'
     )
 
     def action_set_baja(self):
