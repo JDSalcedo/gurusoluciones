@@ -29,6 +29,10 @@ class Airline(models.Model):
         string='Aeroplanos'
     )
 
+    _sql_constraints = [
+        ('unique_name', 'unique(name)', 'El nombre de la Aerolínea debe ser único.')
+    ]
+
     def action_set_baja(self):
         self.ensure_one()
         self.write({'state': BAJA})

@@ -1,7 +1,7 @@
 import re
 
 from odoo import api, fields, models
-# from odoo.exceptions import UserError
+from odoo.exceptions import UserError
 
 from .constants import (
     READY,
@@ -39,6 +39,17 @@ class AirPlane(models.Model):
     country_id = fields.Many2one(related='airline_id.country_id')
     phone = fields.Char(compute='_compute_phone', string='Teléfono', store=True)
     zip = fields.Char(string='Zip', size=7)
+
+    _sql_constraints = [
+        ('unique_name_airline', 'unique(name, airline_id)', 'El nombre del Aeroplano debe ser único por Aerolínea.'),
+        ('check_engine_qty', 'check(engine_qty > 0)', 'La Cant. Motores debe mayor a 0.')
+    ]
+
+    @api.constrains('capacity')
+    def _check_capacity(self):
+        for record in self:
+            if record.capacity < 1:
+                raise UserError('La Capacity no puede ser menor a 0.')
 
     @api.depends('airline_id')
     def _compute_phone(self):
