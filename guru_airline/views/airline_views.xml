@@ -1,18 +1,51 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
+    <!-- vista search es la caja de búsqueda con filtros, agrupados y favoritos -->
+    <record id="guru_airline_view_search" model="ir.ui.view">
+        <field name="name">guru.airline.view.search</field>
+        <field name="model">guru.airline</field>
+        <field name="arch" type="xml">
+            <search>
+                <!-- estos son los campos por los que va a buscar con lo que figure en la caja de busqueda -->
+                <field name="name" />
+                <field name="country_id" />
+                <field name="street" />
+                <field name="zip" />
+                <field name="phone" />
+                <filter name="active_filter" string="Archivado" domain="[('active', '=', False)]" />
+                <group string="Agrupado por...">
+                    <filter name="group_by_country_id" string="País" domain="[]" context="{'group_by': 'country_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <!-- Vista de lista para el index de la operación -->
     <record id="guru_airline_view_tree" model="ir.ui.view">
         <field name="name">guru.airline.view.tree</field>
         <field name="model">guru.airline</field>
         <field name="arch" type="xml">
             <tree>
-                <filed name="name" />
-                <filed name="country_id" />
-                <filed name="street" />
-                <filed name="zip" />
-                <filed name="phone" />
+                <field name="name" />
+                <field name="country_id" />
+                <field name="street" />
+                <field name="zip" />
+                <field name="phone" />
+                <field name="active" widget="boolean_toggle"/>
+                 <field name="state"/>
             </tree>
         </field>
+    </record>
+
+    <!-- Accion Archived Wizard(PopUp)-->
+    <record id="guru_airline_archived_wizard_action" model="ir.actions.act_window">
+        <field name="name">Aerolíneas Archivadas Wizard</field>
+        <field name="res_model">guru.airline</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="guru_airline_view_search"/>
+        <field name="domain">[('active', '=', False)]</field>
+        <field name="target">new</field>
+<!--        <field name="context">{'search_default_inactive_filter': 1, 'search_default_group_by_country_id': 1}</field>-->
     </record>
 
     <!-- Vista de formulario para la creación/modificación de un elemento -->
@@ -20,22 +53,108 @@
         <field name="name">guru.airline.view.form</field>
         <field name="model">guru.airline</field>
         <field name="arch" type="xml">
-            <form>
+            <!-- la propiedad create indica si este formulario permite o no crear nuevos registros -->
+            <form create="1">
+                <header>
+                    <button name="action_set_baja" string="Dar de Baja" type="object" attrs="{'invisible': [('state', '=', 'baja')]}"/>
+                    <button name="%(guru_airline_archived_wizard_action)s" type="action" string="Ver Archivados"/>
+                    <button name="action_open_wizard" string="Ver Archivados" type="object" class="btn-primary"/>
+                    <button name="action_open_archived_wizard" string="Ver Registro" type="object"/>
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="action_get_flota" type="object" icon="fa-plane">
+                            <div class="o_stat_info">
+                                <field name="flota_qty" class="o_stat_value"/>
+                                <span class="o_stat_text">Flota</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Latam..."/>
+                        </h1>
+                    </div>
                     <group>
                         <group>
-                            <filed name="name" />
+                            <!-- <field name="name" /> -->
+                            <field name="active" />
                         </group>
                         <group>
-                            <filed name="country_id" />
-                            <filed name="street" />
-                            <filed name="zip" />
-                            <filed name="phone" />
+                            <!-- no_create: restringe la posibilidad de crear/crear y editar en linea -->
+                            <!-- no_open: restringe la posibilidad de abrir la ventana de edición en linea -->
+                            <field name="country_id" options="{'no_create': 1, 'no_open': 1}"/>
+                            <field name="street" />
+                            <field name="zip" />
+                            <field name="phone" />
+                            <field name="active"/>
                         </group>
+                        <!-- de sta manera odoo define el comportamiento -->
+                        <field name="airplane_ids"/>
                     </group>
+                    <notebook>
+                        <page string="Aeroplanos">
+                            <field name="airplane_ids" readonly="0" context="{'tree_view_ref': 'guru_airline.guru_airplane_view_tree2'}">
+                                <form>
+                                    <header>
+                                        <field name="state" widget="statusbar" statusbar_visible="ready,baja" options="{'clickable': '1'}"/>
+                                    </header>
+                                    <sheet>
+                                        <div>
+                                            <label for="name" class="oe_edit_only"/>
+                                            <h1>
+                                                <field name="name" placeholder="Boeing 747.."/>
+                                            </h1>
+                                        </div>
+                                        <group>
+                                            <group>
+                                                <field name="type"/>
+                                                <field name="capacity"/>
+                                                <field name="engine_qty"/>
+                                            </group>
+                                            <group>
+                                                <field name="airline_id" groups="base.group_no_one"/>
+                                                <field name="active"/>
+                                            </group>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Otra información"></page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
     </record>
 
+    <record id="guru_airline_accion" model="ir.actions.act_window">
+        <field name="name">Aerolínea</field>
+        <field name="res_model">guru.airline</field>
+        <!-- odoo asocia la primer vista tree con la primer acción y la primer vista form con la edición-->
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="guru_airline_view_search"/>
+    </record>
+    <!-- este registro va aquí para ser más claro de que acción va con cual menú -->
+    <menuitem id="guru_airline_airline" name="Aerolinea" parent="guru_airline_registros" action="guru_airline_accion"/>
+
+    <record id="guru_airline_archived_action" model="ir.actions.act_window">
+        <field name="name">Aerolíneas Archivadas</field>
+        <field name="res_model">guru.airline</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="guru_airline_view_search"/>
+        <field name="domain">[('active', '=', False)]</field>
+<!-- <field name="target">current</field>-->
+<!-- <field name="context">{'search_default_inactive_filter': 1, 'search_default_group_by_country_id': 1}</field>-->
+    </record>
+
+    <menuitem
+        id="guru_airline_airline_archived"
+        name="Aerolíneas Archivadas"
+        action="guru_airline_archived_action"
+        parent="guru_airline_registros"
+        sequence="20"
+    />
 </odoo>
