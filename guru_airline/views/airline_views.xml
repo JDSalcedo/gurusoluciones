@@ -26,7 +26,7 @@
         <field name="name">guru.airline.view.tree</field>
         <field name="model">guru.airline</field>
         <field name="arch" type="xml">
-            <tree create="1">
+            <tree create="1" import="1">
                 <field name="name"/>
                 <field name="street"/>
                 <field name="zip" optional="show"/>
@@ -54,7 +54,7 @@
         <field name="name">guru.airline.view.form</field>
         <field name="model">guru.airline</field>
         <field name="arch" type="xml">
-            <form create="1">
+            <form create="1" edit="1" duplicate="1">
                 <header>
                     <button name="action_set_baja" string="Dar de Baja" type="object" attrs="{'invisible': [('state', '=', 'baja')]}"/>
                     <button name="%(guru_airline_archived_wizard_action)s" type="action" string="Ver Archivados"/>
@@ -63,6 +63,15 @@
                     <field name="state" widget="statusbar" statusbar_visible="pending,ready" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box">
+                        <button
+                            name="action_show_airplane"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-list">
+                            <field string="Nro. Aeroplanos" name="airplane_count" widget="statinfo"/>
+                        </button>
+                    </div>
                     <div>
                         <label for="name" class="oe_edit_only"/>
                         <h1>
