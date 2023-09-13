@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- Search Airplane-->
+    <record id="guru_airplane_view_search" model="ir.ui.view">
+        <field name="name">guru.airplane.view.search</field>
+        <field name="model">guru.airplane</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="active"/>
+                <filter name="inactive_filter" string="Archivado" domain="[('active', '=', False)]"/>
+                <group string="Agrupado por...">
+                    <filter name="group_by_state" string="Estado" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter name="group_by_airline_id" string="Aerolínea" domain="[]" context="{'group_by': 'airline_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Tree Airplane-->
+    <record id="guru_airplane_view_tree" model="ir.ui.view">
+        <field name="name">guru.airplane.view.tree</field>
+        <field name="model">guru.airplane</field>
+        <field name="arch" type="xml">
+            <tree create="1">
+                <field name="name"/>
+                <field name="type"/>
+                <field name="capacity"/>
+                <field name="engine_qty"/>
+                <field name="airline_id"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="guru_airplane_view_tree2" model="ir.ui.view">
+        <field name="name">guru.airplane.view.tree2</field>
+        <field name="model">guru.airplane</field>
+        <field name="arch" type="xml">
+            <tree create="1">
+                <field name="name"/>
+                <field name="type"/>
+                <field name="capacity"/>
+                <field name="engine_qty"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form airplane-->
+    <record id="guru_airplane_view_form" model="ir.ui.view">
+        <field name="name">guru.airplane.view.form</field>
+        <field name="model">guru.airplane</field>
+        <field name="arch" type="xml">
+            <form create="1">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="ready,baja" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <div>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Boeing 747.."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="type"/>
+                            <field name="capacity"/>
+                            <field name="engine_qty"/>
+                        </group>
+                        <group>
+                            <field name="airline_id" options="{'no_create': 1, 'no_open': 1}"/>
+                            <field name="country_id" options="{'no_open': 1}"/>
+                            <field name="phone" readonly="0"/>
+                            <field name="zip"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Accion Airplane-->
+    <record id="guru_airplane_action" model="ir.actions.act_window">
+        <field name="name">Aeroplano</field>
+        <field name="res_model">guru.airplane</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="guru_airplane_view_search"/>
+    </record>
+    <menuitem
+        id="guru_airplane"
+        name="Aeroplano"
+        action="guru_airplane_action"
+        parent="guru_airline_records_menu"
+        sequence="20"/>
+
+</odoo>

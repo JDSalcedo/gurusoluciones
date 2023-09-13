@@ -11,5 +11,10 @@
             <menuitem id="guru_airline_pasajeros_menu" name="Pasajeros" parent="guru_airline_records_menu"/>
 
         <menuitem id="guru_airline_reportes_menu" name="Reportes" parent="guru_airline_root_menu"/>
+        <menuitem
+                id="guru_log_menu"
+                name="Log de Productos"
+                action="guru_log.guru_product_log_view_action"
+                parent="guru_airline_reportes_menu"/>
 
 </odoo>
