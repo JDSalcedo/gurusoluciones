@@ -11,6 +11,7 @@ from .constants import (
 class Airline(models.Model):
     _name = 'guru.airline'  # tabla: guru_airline
     _description = 'Tabla para registro de Aerolíneas'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     @api.model
     def default_get(self, fields):
