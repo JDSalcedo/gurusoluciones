@@ -42,6 +42,7 @@ class AirPlane(models.Model):
     # country_id = fields.Many2one(related='airline_id.country_id', store=True)  es para tenerlo almacenado en la tabla
     phone = fields.Char(compute='_compute_phone', string='Teléfono', store=True)
     zip = fields.Char(string='Zip', size=7)
+    user_id = fields.Many2one('res.users', default=lambda self: self.env.user.id, string='Responsable')
 
     _sql_constraints = [
         ('unique_name_airline', 'unique(name, airline_id)', 'El nombre del aeroplano debe ser único por aerolínea'),

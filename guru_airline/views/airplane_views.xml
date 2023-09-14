@@ -31,6 +31,7 @@
                 <field name="airline_id"/>
                 <field name="active" widget="boolean_toggle"/>
                 <field name="state"/>
+                <field name="user_id"/>
             </tree>
         </field>
     </record>
@@ -45,6 +46,7 @@
                 <field name="capacity"/>
                 <field name="engine_qty"/>
                 <field name="state"/>
+                <field name="user_id"/>
             </tree>
         </field>
     </record>
@@ -77,6 +79,7 @@
                             <field name="phone" readonly="0"/>
                             <field name="zip"/>
                             <field name="active"/>
+                            <field name="user_id" options="{'no_create': 1, 'no_open': 1}"/>
                         </group>
                     </group>
                 </sheet>

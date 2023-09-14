@@ -23,3 +23,15 @@ class GuruProductLog(models.Model):
     date = fields.Datetime(string='Fecha de Cambio')
     message = fields.Char(string='Mensaje')
     technical_message = fields.Text(string='Mensaje técnico')
+
+    def save(self, model, res_id, initial_state, final_state, message, technical_message=''):
+        res = self.create({
+            'model': model,
+            'res_id': res_id,
+            'initial_state': initial_state,
+            'final_state': final_state,
+            'message': message,
+            'technical_message': technical_message,
+            'date': fields.Datetime.context_timestamp(self, fields.Datetime.now()),
+        })
+        return res

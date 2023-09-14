@@ -11,6 +11,7 @@ from .constants import (
 class Airline(models.Model):
     _name = 'guru.airline'  # table: guru_airline
     _description = 'Tabla para registro de Aerolíneas'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     @api.model
     def default_get(self, fields):
@@ -33,7 +34,7 @@ class Airline(models.Model):
         inverse_name='airline_id',
         string='Aeroplanos',
         copy=True)
-    airplane_count = fields.Integer(string='Aeroplanos', compute='compute_airplane_count')
+    airplane_count = fields.Integer(compute='_compute_airplane_count')
 
     _sql_constraints = [
         ('unique_name', 'unique(name)', 'El nombre de la aerolínea debe ser único')
@@ -95,6 +96,22 @@ class Airline(models.Model):
     #     except ValueError:
     #         raise ValidationError('No es un Zip válido.')
     #     return super(Airline, self).create(values)
+
+    # def action_alta_tg(self):
+    #     # request.post(url, data)
+    #     code = response.code  # '200' or distinto de '200'
+    #     # Registrar el log del alta
+    #     product_log_model = self.env['guru.product.log']
+    #     product_log_model .registrar(initial_state= '')
+    #     product_log_model.create({
+    #         'date': fields.Datetime.context_timestamp(self, fields.Datetime.now()),
+    #         'initial_state': '****' or False,
+    #         'final_state': 'alta',
+    #         'message': 'Se dio de alta.',
+    #         'technical_message': '',
+    #         'model':self._name,
+    #         'res_id': self.id
+    #     })
 
     @api.model
     def create(self, values):

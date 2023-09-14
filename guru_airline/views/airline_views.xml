@@ -24,11 +24,11 @@
         <field name="name">guru.airline.view.tree</field>
         <field name="model">guru.airline</field>
         <field name="arch" type="xml">
-            <tree create='1'>
+            <tree>
                 <field name="name"/>
                 <field name="street"/>
-                <field name="zip"/>
-                <field name="phone"/>
+                <field name="zip" optional="show"/>
+                <field name="phone" optional="hide"/>
                 <field name="country_id"/>
                 <field name="active" widget="boolean_toggle"/>
                 <field name="state"/>
@@ -52,9 +52,14 @@
         <field name="name">guru.airline.view.form</field>
         <field name="model">guru.airline</field>
         <field name="arch" type="xml">
-            <form create="1">
+            <form>
                 <header>
-                    <button name="action_set_baja" string="Dar de Baja" type="object" attrs="{'invisible': [('state', '=', 'baja')]}" confirm="¿Está seguro que quiere dar de baja la aerolínea?"/>
+                    <button
+                            name="action_set_baja"
+                            string="Dar de Baja"
+                            type="object"
+                            attrs="{'invisible': [('state', '=', 'baja')]}"
+                            confirm="¿Está seguro que quiere dar de baja la aerolínea?"/>
                     <button name="%(guru_airline_archived_action)s" type="action" string="Ver archivados"/>
                     <button name="action_open_wizard" type="object" string="Ver archivados" class="btn-primary"/>
                     <button name="action_open_archived_wizard" string="Ver Registro" type="object"/>
@@ -67,7 +72,7 @@
                             type="object"
                             class="oe_stat_button"
                             icon="fa-plane-up">
-                            <field string="Aeroplanos" name="airplane_count" widget="statinfo"/>
+                            <field string="Nro. Aeroplanos" name="airplane_count" widget="statinfo"/>
                         </button>
                     </div>
                     <div>
@@ -86,12 +91,46 @@
                             <field name="country_id" options="{'no_create': 1,'no_open': 1}"/>
                             <field name="active"/>
                         </group>
-                        <label for="airplane_ids"/>
-                        <field name="airplane_ids">
-
-                        </field>
                     </group>
+                    <notebook>
+                        <page string="Aeroplanos">
+                            <field name="airplane_ids" readonly="0" context="{'tree_view_ref': 'guru_airline.guru_airplane_view_tree2'}">
+                                <form>
+                                    <header>
+                                        <field name="state" widget="statusbar" statusbar_visible="ready,baja" options="{'clickable': '1'}"/>
+                                    </header>
+                                    <sheet>
+                                        <div>
+                                            <label for="name" class="oe_edit_only"/>
+                                            <h1>
+                                                <field name="name" placeholder="Boeing 747.."/>
+                                            </h1>
+                                        </div>
+                                        <group>
+                                            <group>
+                                                <field name="type"/>
+                                                <field name="capacity"/>
+                                                <field name="engine_qty"/>
+                                            </group>
+                                            <group>
+                                                <field name="airline_id" groups="base.group_no_one"/>
+                                                <field name="active"/>
+                                            </group>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page
+                            string="Otra información">
+                        </page>
+                    </notebook>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
@@ -125,6 +164,7 @@
         name="Aerolíneas Archivadas"
         action="guru_airline_archived_action"
         parent="guru_airline_records_menu"
+        groups="group_airline_manager"
         sequence="20"/>
 
 </odoo>
