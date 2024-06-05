@@ -32,6 +32,7 @@
                 <field name="zip" optional="show"/>
                 <field name="phone" optional="hide"/>
                 <field name="country_id"/>
+                <field name="user1_ids" widget="many2many_tags"/>
                 <field name="active" widget="boolean_toggle"/>
                 <field name="state"/>
             </tree>
@@ -81,6 +82,8 @@
                     <group>
                         <group>
                             <field name="street" required="1"/>
+                            <field name="user1_ids" widget="many2many_tags" options="{'no_create': 1}" domain="[('share','=',False)]"/>
+                            <field name="user2_ids" widget="many2many_tags" options="{'no_create': 1}"/>
                         </group>
                         <group>
                             <field name="zip" attrs="{'required': [('state', '=', 'pending')]}"/>

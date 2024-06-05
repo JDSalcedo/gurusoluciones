@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit Form View to Modify it -->
+    <record id="view_users_form_view_inherit" model="ir.ui.view">
+        <field name="name">view.users.form.view.inherit</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='action_id']" position="after">
+               <field name="airline_ids" widget="many2many_tags" options="{'no_create': 1}" domain="[('country_id', '=', 10)]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

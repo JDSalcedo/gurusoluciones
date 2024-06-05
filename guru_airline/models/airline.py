@@ -38,6 +38,16 @@ class Airline(models.Model):
         copy=True
     )
     airplane_count = fields.Integer(compute='_compute_airplane_count')
+    # table: guru_airline_res_users_rel
+    user1_ids = fields.Many2many('res.users', string='Usuarios Permitidos')
+    # table: guru_airline_res_users_no_rel
+    user2_ids = fields.Many2many(
+        comodel_name='res.users',
+        relation='guru_airline_res_users_no_rel',
+        column1='airplane_id',
+        column2='user_id',
+        string='Usuarios NO Permitidos'
+    )
 
     _sql_constraints = [
         ('unique_name', 'unique(name)', 'El nombre de la Aerolínea debe ser único.')
